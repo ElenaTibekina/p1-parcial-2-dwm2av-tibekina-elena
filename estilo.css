@@ -1,0 +1,186 @@
+:root {
+    /* COLORES */
+    --background-color-primary: #dddbf1;
+    --background-color-dark: #585679;
+    --color-white: #fff;
+
+    --light-grey-color: #bcbebe;
+    --dark-grey-color: #56525b;
+    --dark-grey-color-1: #3c3b3d;
+
+    --text-color-primary: #36240f;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-weight: 400;
+    font-family: Verdana, sans-serif;
+    font-size: 16px;
+    color: var(--text-color-primary);
+    overflow-x: hidden;
+}
+
+main {
+    background-color: var(--background-color-primary);
+}
+
+header {
+    background-color: var(--background-color-dark);
+    border-bottom: none;
+}
+
+ul, ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/*navigation*/
+.cart-img {
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    filter: brightness(0) saturate(100%) invert(100%);
+    background-image: url('img/icons/cart.svg');
+    width: 30px;
+    height: 30px;
+    padding-right: 30px;
+    text-indent: -9999px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.logo {
+    text-align: center;
+    display: block;
+    width: 90px;
+    height: 60px;
+    background-image: url('img/logo/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-indent: -9999px;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #fff;
+}
+
+.nav-item {
+    color: var(--color-white);
+}
+
+.nav-item:hover {
+    color: var(--light-grey-color);
+}
+
+/*product*/
+.product-card {
+    background-color: var(--color-white);
+}
+
+.card-text {
+    color: var(--text-color-primary);
+}
+
+.product-card__img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.btn-icon-only {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+.btn-icon-only::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    background-image: url('img/icons/delete.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter: brightness(0) invert(1);
+    pointer-events: none;
+}
+
+.btn-product {
+    background-color: var(--dark-grey-color);
+    color: var(--color-white);
+    border-radius: 2rem;
+}
+
+.btn.btn-product:hover,
+.btn.btn-product:active {
+    background-color: var(--dark-grey-color-1);
+    color: var(--color-white);
+}
+
+/*footer*/
+.footer {
+    background-color: var(--background-color-dark);
+}
+
+.social-icon {
+    filter: brightness(0) invert(1);
+}
+
+.icono-red {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.instagram {
+    background-image: url("img/icons/insta.svg");
+}
+
+.facebook {
+    background-image: url("img/icons/facebook.svg");
+}
+
+.tiktok {
+    background-image: url("img/icons/tiktok.svg");
+}
+
+
+@media (max-width: 768px) {
+    .footer-logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
