@@ -115,7 +115,7 @@ function createProductCard(product) {
   const addButton = document.createElement("button");
   addButton.className = "btn btn-product btn-sm";
   addButton.textContent = "Agregar al carrito";
-  addButton.disabled = cart.some(item => item.id === product.id);
+  addButton.disabled = false;
   addButton.onclick = () => {
     addToCart(product.id);
     updateCart();
@@ -173,10 +173,10 @@ function renderProducts(category = "all") {
 function addToCart(id) {
   const existing = cart.find(p => p.id === id);
   if (existing) {
-    return;
+    existing.quantity++;
   } else {
     const product = products.find(p => p.id === id);
-    cart.push({ ...product });
+    cart.push({ ...product, quantity: 1 });
   }
   updateCart();
 }
@@ -185,8 +185,8 @@ function updateCart() {
   const countElem = document.querySelector("#cart-count");
   const totalElem = document.querySelector("#total");
 
-  const totalItems = cart.length;
-  const totalPrice = cart.reduce((sum, p) => sum + p.price, 0);
+  const totalItems = cart.reduce((sum, p) => sum + p.quantity, 0);
+  const totalPrice = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
 
   if (countElem) countElem.textContent = totalItems;
   if (totalElem) totalElem.textContent = `$${totalPrice.toLocaleString("es-AR")}`;
@@ -333,15 +333,14 @@ function openProductModal(product) {
   btnAdd.id = "btnAddFromModal";
 
   const isInCart = cart.some(p => p.id === product.id);
-  btnAdd.disabled = isInCart;
-  btnAdd.textContent = isInCart ? "Producto en carrito" : "Agregar al carrito";
+  btnAdd.disabled = false;
+  btnAdd.textContent = "Agregar al carrito";
 
   btnAdd.onclick = () => {
     addToCart(product.id);
     updateCart();
     renderProducts();
-    btnAdd.disabled = true;
-    btnAdd.textContent = "Producto en carrito";
+    renderCartModal();
     showToast(`Producto "${product.name}" agregado al carrito`);
   };
 
@@ -407,12 +406,45 @@ function renderCartModal() {
     row.className = "d-flex justify-content-between align-items-center border-bottom py-2 flex-wrap";
 
     const name = document.createElement("div");
-    name.className = "fw-bold col-12 col-md-6";
-    name.textContent = product.name;
+    name.className = "fw-bold col-12 col-md-4";
+    name.textContent = `${product.name} ($${product.price.toLocaleString("es-AR")})`;
+
+    const quantityControl = document.createElement("div");
+    quantityControl.className = "d-flex align-items-center gap-2";
+
+    const btnMinus = document.createElement("button");
+    btnMinus.className = "btn btn-outline-secondary btn-sm";
+    btnMinus.textContent = "–";
+    btnMinus.onclick = () => {
+      product.quantity--;
+      if (product.quantity <= 0) {
+        const index = cart.findIndex(p => p.id === product.id);
+        cart.splice(index, 1);
+      }
+      updateCart();
+      renderProducts();
+      renderCartModal();
+    };
+
+    const qty = document.createElement("span");
+    qty.className = "fw-bold";
+    qty.textContent = product.quantity;
+
+    const btnPlus = document.createElement("button");
+    btnPlus.className = "btn btn-outline-secondary btn-sm";
+    btnPlus.textContent = "+";
+    btnPlus.onclick = () => {
+      product.quantity++;
+      updateCart();
+      renderProducts();
+      renderCartModal();
+    };
+
+    quantityControl.append(btnMinus, qty, btnPlus);
 
     const total = document.createElement("div");
-    total.className = "fw-semibold text-end col-12 col-md-4 mt-2 mt-md-0";
-    total.textContent = `$${product.price.toLocaleString("es-AR")}`;
+    total.className = "fw-semibold text-end col-12 col-md-3 mt-2 mt-md-0";
+    total.textContent = `$${(product.price * product.quantity).toLocaleString("es-AR")}`;
 
     const btnRemove = document.createElement("button");
     btnRemove.className = "btn btn-sm btn-danger btn-icon-only ms-3";
@@ -427,12 +459,12 @@ function renderCartModal() {
       }
     };
 
-    row.append(name, total, btnRemove);
+    row.append(name, quantityControl, total, btnRemove);
     body.appendChild(row);
   });
 
-  const totalSum = cart.reduce((sum, p) => sum + p.price, 0);
-  const totalQty = cart.length;
+  const totalSum = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+  const totalQty = cart.reduce((sum, p) => sum + p.quantity, 0);
 
   const totalRow = document.createElement("div");
   totalRow.className = "fw-bold fs-5 text-end mt-3";
